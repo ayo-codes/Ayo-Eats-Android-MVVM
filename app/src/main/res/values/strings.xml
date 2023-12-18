@@ -6,8 +6,20 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-
+<!-- Menu Strings -->
     <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
+    <string name="menu_meal_location">Add Meal Location </string>
     <string name="menu_slideshow">Slideshow</string>
+<!--    Meal Location Strings -->
+    <string name="button_add_MealLocation"> Add Meal Location</string>
+    <string name="hint_mealName">Meal Name</string>
+    <string name="hint_mealDescription">Meal Description</string>
+    <string name="hint_mealPrice">Meal Price</string>
+    <string name="hint_mealRating">Rate the Meal out of 5</string>
+    <string name="textview_rate_label">Current Rating</string>
+    <string name="textview_rating_progress">0 Stars</string>
+    <string name="enter_mealLocation_mealName">Please Enter a Meal Name</string>
+    <string name="save_meal_location">Save Meal Location</string>
+
+
 </resources>
