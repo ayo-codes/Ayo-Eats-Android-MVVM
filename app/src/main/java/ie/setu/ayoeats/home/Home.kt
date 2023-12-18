@@ -1,4 +1,4 @@
-package ie.setu.ayoeats
+package ie.setu.ayoeats.home
 
 import android.os.Bundle
 import android.view.Menu
@@ -11,9 +11,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import ie.setu.ayoeats.R
 import ie.setu.ayoeats.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class Home : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
