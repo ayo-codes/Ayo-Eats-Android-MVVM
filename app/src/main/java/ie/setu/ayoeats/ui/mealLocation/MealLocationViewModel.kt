@@ -3,6 +3,8 @@ package ie.setu.ayoeats.ui.mealLocation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ie.setu.ayoeats.models.MealLocationMemStore
+import ie.setu.ayoeats.models.MealLocationModel
 
 class MealLocationViewModel : ViewModel() {
 
@@ -16,8 +18,10 @@ class MealLocationViewModel : ViewModel() {
     val observableStatus : LiveData<Boolean>
         get() = status
 
-    fun addMealLocation(){
+//    val mealLocations = MealLocationMemStore
+    fun addMealLocation(mealLocation : MealLocationModel){
         status.value = try {
+            MealLocationMemStore.create(mealLocation)
             true
         } catch (e: IllegalArgumentException) {
             false

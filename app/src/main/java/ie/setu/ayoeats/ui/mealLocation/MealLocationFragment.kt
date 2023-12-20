@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import ie.setu.ayoeats.R
 import ie.setu.ayoeats.databinding.FragmentMealLocationBinding
+import ie.setu.ayoeats.models.MealLocationModel
 import timber.log.Timber
 
 class MealLocationFragment : Fragment() {
@@ -75,8 +76,9 @@ class MealLocationFragment : Fragment() {
             if (layout.mealName.text.toString().isEmpty()) {
                Snackbar.make(it, R.string.enter_mealLocation_mealName, Snackbar.LENGTH_LONG).show() // This shows the warning message if the field is empty
             } else {
-                mealLocationViewModel.addMealLocation()
                 var mealName = layout.mealName.text.toString()
+                mealLocationViewModel.addMealLocation(MealLocationModel(mealName =  mealName , mealDescription = "Testing this "))
+
                 Timber.i("Click Worked")
                 Timber.i(mealName)
             }
