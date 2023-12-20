@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -25,7 +26,6 @@ class MealLocationFragment : Fragment() {
     private lateinit var mealLocationViewModel: MealLocationViewModel // view model
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,8 +38,24 @@ class MealLocationFragment : Fragment() {
         mealLocationViewModel =
             ViewModelProvider(this).get(MealLocationViewModel::class.java) // initialise the view model
 
-        mealLocationViewModel.observableStatus.observe(viewLifecycleOwner , Observer { status ->
+        mealLocationViewModel.observableStatus.observe(viewLifecycleOwner, Observer { status ->
             status?.let { render(status) }
+        })
+
+        fragBinding.seekBarRatings.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                fragBinding.RatingsProgress.text =
+                    fragBinding.seekBarRatings.progress.toString() + " Stars"
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                fragBinding.RatingsProgress.text = fragBinding.seekBarRatings.progress.toString()
+            }
         })
 
         setAddDonationButtonListener(fragBinding)
@@ -63,6 +79,7 @@ class MealLocationFragment : Fragment() {
                 view?.let {
                 }
             }
+
             false -> {
                 Toast.makeText(context, "Error : Could not Add Meal Location..", Toast.LENGTH_LONG)
                     .show()
@@ -70,14 +87,26 @@ class MealLocationFragment : Fragment() {
         }
     }
 
-    fun setAddDonationButtonListener(layout: FragmentMealLocationBinding ){
-        layout.btnAdd.setOnClickListener{
+    fun setAddDonationButtonListener(layout: FragmentMealLocationBinding) {
+        layout.btnAdd.setOnClickListener {
 
             if (layout.mealName.text.toString().isEmpty()) {
-               Snackbar.make(it, R.string.enter_mealLocation_mealName, Snackbar.LENGTH_LONG).show() // This shows the warning message if the field is empty
+                Snackbar.make(it, R.string.enter_mealLocation_mealName, Snackbar.LENGTH_LONG)
+                    .show() // This shows the warning message if the field is empty
             } else {
-                var mealName = layout.mealName.text.toString()
-                mealLocationViewModel.addMealLocation(MealLocationModel(mealName =  mealName , mealDescription = "Testing this "))
+                val mealName = layout.mealName.text.toString()
+                val mealDescription = layout.mealDescription.text.toString()
+                val mealPrice = layout.mealPrice.text.toString().toDouble()
+                val mealRating = layout.RatingsProgress.text.toString().toDouble()
+
+                mealLocationViewModel.addMealLocation(
+                    MealLocationModel(
+                        mealName = mealName,
+                        mealDescription = mealDescription,
+                        mealPrice = mealPrice,
+                        mealRating = mealRating
+                    )
+                )
 
                 Timber.i("Click Worked")
                 Timber.i(mealName)
