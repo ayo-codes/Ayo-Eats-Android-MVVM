@@ -5,7 +5,7 @@
     android:id="@+id/mealLocationFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MealLocation.MealLocationFragment">
+    tools:context=".ui.mealLocation.MealLocationFragment">
 
     <TextView
         android:id="@+id/text_gallery"
