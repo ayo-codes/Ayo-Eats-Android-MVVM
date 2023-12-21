@@ -25,5 +25,12 @@
     <string name="mealLocationsNotFound">No meal locations Yet…\nGo and add a Meal!</string>
     <string name="change_mealLocation_image"> Change Meal Image</string>
 
+<!--    Meal Location Details -->
+    <string name="mealLocationDetails">Meal Location Details </string>
+    <string name="mealName">Meal Name</string>
+    <string name="mealDescription">Meal Description</string>
+    <string name="mealPrice">Meal Price</string>
+    <string name="mealRating">Meal Rating</string>
+
 
 </resources>
