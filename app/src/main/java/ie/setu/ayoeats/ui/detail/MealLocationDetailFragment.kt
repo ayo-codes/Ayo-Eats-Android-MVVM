@@ -7,34 +7,40 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.snackbar.Snackbar
 import ie.setu.ayoeats.R
+import ie.setu.ayoeats.databinding.FragmentMealLocationDetailBinding
+import ie.setu.ayoeats.databinding.FragmentMealLocationsListBinding
 
 class MealLocationDetailFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = MealLocationDetailFragment()
-    }
-
-    private lateinit var viewModel: MealLocationDetailViewModel
+    private val detailViewModel: MealLocationDetailViewModel by activityViewModels()
     private val args by navArgs<MealLocationDetailFragmentArgs>()
+    private var _fragBinging : FragmentMealLocationDetailBinding? = null
+    private val fragBinding get() = _fragBinging!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_meal_location_detail, container, false)
+        _fragBinging = FragmentMealLocationDetailBinding.inflate(inflater, container, false)
+        val root = fragBinding.root
 
         Toast.makeText(context, "Meal Location Id selected : ${args.mealLocationuid}", Toast.LENGTH_LONG).show()
 
-        return view
+        detailViewModel.observableMealLocation.observe(viewLifecycleOwner, Observer { render() })
+        return root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MealLocationDetailViewModel::class.java)
-        // TODO: Use the ViewModel
+    private fun render() {
+        fragBinding.mealLocationDetail = detailViewModel
+    }
+
+    override fun onResume() {
+        super.onResume()
+        detailViewModel.getMealLocation(args.mealLocationuid)
     }
 
 }
