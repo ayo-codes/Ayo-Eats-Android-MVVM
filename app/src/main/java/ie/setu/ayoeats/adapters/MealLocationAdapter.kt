@@ -35,10 +35,11 @@ class MealLocationAdapter constructor(
     inner class MainHolder( val binding: CardMealLocationBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(mealLocation: MealLocationModel, listener: MealLocationListener){
-            binding.mealName.text = mealLocation.mealName
-            binding.mealDescription.text = mealLocation.mealDescription
+//            binding.mealName.text = mealLocation.mealName
+//            binding.mealDescription.text = mealLocation.mealDescription
+            binding.mealLocation = mealLocation
             binding.root.setOnClickListener { listener.onMealLocationClick(mealLocation) }
-//            binding.executePendingBindings()
+            binding.executePendingBindings()
         }
     }
 
