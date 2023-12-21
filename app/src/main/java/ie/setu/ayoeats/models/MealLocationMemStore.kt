@@ -11,7 +11,12 @@ object MealLocationMemStore: AppCompatActivity(), MealLocationStore {
         logAll()
     }
 
+    override fun findAll(): ArrayList<MealLocationModel> {
+        return mealLocations
+    }
+
     private fun logAll() {
         mealLocations.forEach { i("$it") }
+        i("$mealLocations")
     }
 }
