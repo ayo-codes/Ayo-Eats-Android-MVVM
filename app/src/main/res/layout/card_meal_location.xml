@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="mealLocation"
+            type="ie.setu.ayoeats.models.MealLocationModel" />
+    </data>
+
+
+<androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
@@ -34,6 +42,7 @@
             android:layout_marginTop="4dp"
             android:textAlignment="viewStart"
             android:textSize="30sp"
+            android:text="@{mealLocation.mealName}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.048"
             app:layout_constraintStart_toEndOf="@id/imageIcon"
@@ -46,6 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:textAlignment="viewStart"
+            android:text="@{mealLocation.mealDescription}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.052"
             app:layout_constraintStart_toEndOf="@id/imageIcon"
@@ -55,3 +65,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
+</layout>
