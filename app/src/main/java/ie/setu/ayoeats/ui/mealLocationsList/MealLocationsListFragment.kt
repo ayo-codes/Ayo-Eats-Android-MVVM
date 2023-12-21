@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import ie.setu.ayoeats.adapters.MealLocationAdapter
 import ie.setu.ayoeats.adapters.MealLocationListener
@@ -67,6 +68,8 @@ class MealLocationsListFragment : Fragment() , MealLocationListener {
 
     override fun onMealLocationClick(mealLocationModel: MealLocationModel) {
         Timber.i("Clicked the meal location : $mealLocationModel")
+        val action = MealLocationsListFragmentDirections.actionNavHomeToMealLocationDetailFragment()
+        findNavController().navigate(action)
     }
 
     override fun onResume() {

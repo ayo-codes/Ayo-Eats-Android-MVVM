@@ -39,7 +39,7 @@ class MealLocationAdapter constructor(
 //            binding.mealDescription.text = mealLocation.mealDescription
             binding.mealLocation = mealLocation
             binding.root.setOnClickListener { listener.onMealLocationClick(mealLocation) }
-//            binding.executePendingBindings()
+            binding.executePendingBindings()
         }
     }
 
