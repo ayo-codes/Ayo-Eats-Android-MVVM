@@ -66,9 +66,9 @@ class MealLocationsListFragment : Fragment() , MealLocationListener {
 
     }
 
-    override fun onMealLocationClick(mealLocationModel: MealLocationModel) {
-        Timber.i("Clicked the meal location : $mealLocationModel")
-        val action = MealLocationsListFragmentDirections.actionNavHomeToMealLocationDetailFragment()
+    override fun onMealLocationClick(mealLocation: MealLocationModel) {
+        Timber.i("Clicked the meal location : $mealLocation")
+        val action = MealLocationsListFragmentDirections.actionNavHomeToMealLocationDetailFragment(mealLocation.uid)
         findNavController().navigate(action)
     }
 

@@ -41,5 +41,8 @@
         <action
             android:id="@+id/action_mealLocationDetailFragment_to_nav_home"
             app:destination="@id/nav_home" />
+        <argument
+            android:name="mealLocationuid"
+            app:argType="long" />
     </fragment>
 </navigation>
