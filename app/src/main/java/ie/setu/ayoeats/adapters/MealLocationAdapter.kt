@@ -43,4 +43,9 @@ class MealLocationAdapter constructor(
         }
     }
 
+    fun removeAt(position: Int) {
+        mealLocations.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
 }

@@ -5,4 +5,6 @@ interface MealLocationStore {
     fun findAll() : ArrayList<MealLocationModel>
 
     fun findById(uid : Long) : MealLocationModel?
+
+    fun delete (uid: Long)
 }
