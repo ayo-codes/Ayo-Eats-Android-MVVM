@@ -32,5 +32,7 @@
     <string name="mealPrice">Meal Price</string>
     <string name="mealRating">Meal Rating</string>
 
+<!--    Meal Location Loading -->
+    <string name="messageLoading">Please Wait while the Meal Locations are Loading...</string>
 
 </resources>

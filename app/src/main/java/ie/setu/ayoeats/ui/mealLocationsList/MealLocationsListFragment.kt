@@ -1,5 +1,6 @@
 package ie.setu.ayoeats.ui.mealLocationsList
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,9 @@ import ie.setu.ayoeats.adapters.MealLocationAdapter
 import ie.setu.ayoeats.adapters.MealLocationListener
 import ie.setu.ayoeats.databinding.FragmentMealLocationsListBinding
 import ie.setu.ayoeats.models.MealLocationModel
+import ie.setu.ayoeats.utils.createLoader
+import ie.setu.ayoeats.utils.hideLoader
+import ie.setu.ayoeats.utils.showLoader
 import timber.log.Timber
 
 
@@ -27,6 +31,7 @@ class MealLocationsListFragment : Fragment() , MealLocationListener {
     private val fragBinding get() = _fragBinding!!
     private val mealLocationsListViewModel : MealLocationsListViewModel by activityViewModels()
 
+    lateinit var loader : AlertDialog
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,12 +43,18 @@ class MealLocationsListFragment : Fragment() , MealLocationListener {
         val root: View = fragBinding.root
 
         fragBinding.recyclerView.layoutManager = LinearLayoutManager(activity)
+        loader = createLoader(requireActivity()) // creates the loader icon
 
+        showLoader(loader, "Fetching your list of Meal Locations ")
         mealLocationsListViewModel.observableMealLocationsList.observe(viewLifecycleOwner , Observer {
             mealLocations ->
             mealLocations?.let {
                 render( mealLocations as ArrayList<MealLocationModel>)
+                hideLoader(loader)
+                checkSwipeRefresh()
             }
+
+            setSwipeRefresh()
         })
 
         return root
@@ -74,7 +85,28 @@ class MealLocationsListFragment : Fragment() , MealLocationListener {
 
     override fun onResume() {
         super.onResume()
-        mealLocationsListViewModel.loadAll()
+        showLoader(loader, " Fetching your meal locations ")
+//        mealLocationsListViewModel.loadAll()
+        mealLocationsListViewModel.observableMealLocationsList.observe(viewLifecycleOwner , Observer {
+                mealLocations ->
+            mealLocations?.let {
+                render( mealLocations as ArrayList<MealLocationModel>)
+                hideLoader(loader)
+            }
+        })
+    }
+
+    // Refresh the feed
+    fun setSwipeRefresh() {
+        fragBinding.swiperefresh.setOnRefreshListener {
+            fragBinding.swiperefresh.isRefreshing = true
+            showLoader(loader, "Fetching your meal locations")
+        }
+    }
+
+    fun checkSwipeRefresh() {
+        if(fragBinding.swiperefresh.isRefreshing)
+            fragBinding.swiperefresh.isRefreshing = false
     }
 
 
