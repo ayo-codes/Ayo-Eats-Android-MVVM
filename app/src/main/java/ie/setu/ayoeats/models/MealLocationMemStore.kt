@@ -27,6 +27,10 @@ object MealLocationMemStore: AppCompatActivity(), MealLocationStore {
         return foundMealLocation
     }
 
+    override fun delete(uid: Long) {
+        TODO("Not yet implemented")
+    }
+
     private fun logAll() {
         mealLocations.forEach { i("$it") }
         i("$mealLocations")
