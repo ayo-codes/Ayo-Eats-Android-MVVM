@@ -3,6 +3,7 @@ package ie.setu.ayoeats.ui.mealLocationsList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseUser
 import ie.setu.ayoeats.models.MealLocationMemStore
 import ie.setu.ayoeats.models.MealLocationModel
 import ie.setu.ayoeats.models.MealLocationStore
@@ -14,6 +15,8 @@ class MealLocationsListViewModel : ViewModel() {
 
     val observableMealLocationsList: LiveData<ArrayList<MealLocationModel>>
         get() = mealLocationsList
+
+    val liveFirebaseUser = MutableLiveData<FirebaseUser>()
 
     init {
 
@@ -28,4 +31,6 @@ class MealLocationsListViewModel : ViewModel() {
             Timber.i("Load Error : ${e.message}")
         }
     }
+
+
 }

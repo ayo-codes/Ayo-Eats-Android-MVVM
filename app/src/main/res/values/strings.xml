@@ -6,11 +6,11 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-<!-- Menu Strings -->
+    <!-- Menu Strings -->
     <string name="menu_home">Home</string>
     <string name="menu_meal_location">Add Meal Location </string>
     <string name="menu_slideshow">Slideshow</string>
-<!--    Meal Location Strings -->
+    <!--    Meal Location Strings -->
     <string name="button_add_MealLocation"> Add Meal Location</string>
     <string name="hint_mealName">Meal Name</string>
     <string name="hint_mealDescription">Meal Description</string>
@@ -21,18 +21,39 @@
     <string name="enter_mealLocation_mealName">Please Enter a Meal Name</string>
     <string name="save_meal_location">Save Meal Location</string>
 
-<!-- Meal Location List -->
+    <!-- Meal Location List -->
     <string name="mealLocationsNotFound">No meal locations Yet…\nGo and add a Meal!</string>
     <string name="change_mealLocation_image"> Change Meal Image</string>
 
-<!--    Meal Location Details -->
+    <!--    Meal Location Details -->
     <string name="mealLocationDetails">Meal Location Details </string>
     <string name="mealName">Meal Name</string>
     <string name="mealDescription">Meal Description</string>
     <string name="mealPrice">Meal Price</string>
     <string name="mealRating">Meal Rating</string>
 
-<!--    Meal Location Loading -->
+    <!--    Meal Location Loading -->
     <string name="messageLoading">Please Wait while the Meal Locations are Loading...</string>
 
+<!--    Firebase Auth -->
+    <string name="label_emailpassword">Email/Password Authentication</string>
+    <string name="desc_emailpassword">Use an email and password to authenticate with Firebase.</string>
+    <string name="sign_in">Sign In</string>
+    <string name="create_account">Create Account</string>
+    <string name="send_link">Send Link</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="verify_email">Verify Email</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="loading">Loading…</string>
+    <string name="signed_in">Signed In</string>
+    <string name="signed_out">Signed Out</string>
+    <string name="token_null">Token: null</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="desc_firebase_lockup">Firebase logo and name</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="firebase_status_fmt">Firebase User: %s</string>
+    <string name="firebase_user_management">Firebase User Management</string>
+    <string name="emailpassword_status_fmt">Email User: %1$s (verified: %2$b)</string>
+    <string name="emailpassword_title_text">Please Login Below</string>
 </resources>

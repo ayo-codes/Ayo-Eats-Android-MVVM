@@ -37,6 +37,7 @@ class MealLocationAdapter constructor(
         fun bind(mealLocation: MealLocationModel, listener: MealLocationListener){
 //            binding.mealName.text = mealLocation.mealName
 //            binding.mealDescription.text = mealLocation.mealDescription
+//            binding.root.tag = mealLocation.uid
             binding.mealLocation = mealLocation
             binding.root.setOnClickListener { listener.onMealLocationClick(mealLocation) }
             binding.executePendingBindings()
