@@ -12,7 +12,7 @@ class MealLocationDetailViewModel : ViewModel() {
     val observableMealLocation : LiveData<MealLocationModel>
         get() = mealLocation
 
-    fun getMealLocation(uid : Long) {
+    fun getMealLocation(uid : String) {
         mealLocation.value = MealLocationMemStore.findById(uid)
     }
 }

@@ -54,7 +54,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="4dp"
         android:textAlignment="viewStart"
-        android:text="@{Double.toString(mealLocationDetail.observableMealLocation.mealPrice)}"
+        android:text="@={``+ mealLocationDetail.observableMealLocation.mealPrice}"
         android:textSize="24sp"
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -68,7 +68,7 @@
         android:layout_marginEnd="4dp"
         android:ems="10"
         android:textSize="24sp"
-        android:text="@{mealLocationDetail.observableMealLocation.mealDescription}"
+        android:text="@={mealLocationDetail.observableMealLocation.mealDescription}"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editMealName" />
 
@@ -81,7 +81,7 @@
         android:ems="10"
         android:inputType="number"
         android:textSize="24sp"
-        android:text="@{Double.toString(mealLocationDetail.observableMealLocation.mealRating)}"
+        android:text="@={``+ mealLocationDetail.observableMealLocation.mealRating}"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editMealPrice" />
 
@@ -93,7 +93,7 @@
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:textAlignment="viewStart"
-        android:text="@{mealLocationDetail.observableMealLocation.mealName}"
+        android:text="@={mealLocationDetail.observableMealLocation.mealName}"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -132,7 +132,7 @@
         android:id="@+id/editMealLocationButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Edit"
+        android:text="@string/update"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/deleteMealLocationButton"
         app:layout_constraintHorizontal_chainStyle="packed"
@@ -142,7 +142,7 @@
         android:id="@+id/deleteMealLocationButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Delete"
+        android:text="@string/delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/editMealLocationButton" />

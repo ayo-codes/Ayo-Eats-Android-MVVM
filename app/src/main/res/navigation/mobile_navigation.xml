@@ -43,6 +43,6 @@
             app:destination="@id/nav_home" />
         <argument
             android:name="mealLocationuid"
-            app:argType="long" />
+            app:argType="string" />
     </fragment>
 </navigation>

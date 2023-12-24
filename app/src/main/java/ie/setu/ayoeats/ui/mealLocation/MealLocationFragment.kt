@@ -103,6 +103,7 @@ class MealLocationFragment : Fragment() {
                 val mealRating = layout.RatingsProgress.text.toString().toDouble()
 
                 mealLocationViewModel.addMealLocation(
+                    loggedInViewModel.liveFirebaseUser,
                     MealLocationModel(
                         mealName = mealName,
                         mealDescription = mealDescription,

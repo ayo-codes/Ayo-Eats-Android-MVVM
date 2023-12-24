@@ -13,10 +13,12 @@ import androidx.navigation.fragment.navArgs
 import ie.setu.ayoeats.R
 import ie.setu.ayoeats.databinding.FragmentMealLocationDetailBinding
 import ie.setu.ayoeats.databinding.FragmentMealLocationsListBinding
+import ie.setu.ayoeats.ui.auth.LoggedInViewModel
 
 class MealLocationDetailFragment : Fragment() {
 
     private val detailViewModel: MealLocationDetailViewModel by activityViewModels()
+    private val loggedInViewModel : LoggedInViewModel by activityViewModels()
     private val args by navArgs<MealLocationDetailFragmentArgs>()
     private var _fragBinging : FragmentMealLocationDetailBinding? = null
     private val fragBinding get() = _fragBinging!!
