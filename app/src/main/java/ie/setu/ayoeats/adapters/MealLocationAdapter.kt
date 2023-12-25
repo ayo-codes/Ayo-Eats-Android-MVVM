@@ -12,7 +12,8 @@ interface MealLocationListener {
 
 class MealLocationAdapter constructor(
     private var mealLocations: ArrayList<MealLocationModel>,
-    private val listener: MealLocationListener
+    private val listener: MealLocationListener,
+    private val readOnly: Boolean
 ) : RecyclerView.Adapter<MealLocationAdapter.MainHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -20,7 +21,7 @@ class MealLocationAdapter constructor(
     ): MealLocationAdapter.MainHolder {
         val binding = CardMealLocationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return MainHolder(binding)
+        return MainHolder(binding, readOnly)
     }
 
     override fun onBindViewHolder(holder: MealLocationAdapter.MainHolder, position: Int) {
@@ -32,8 +33,9 @@ class MealLocationAdapter constructor(
         return mealLocations.size
     }
 
-    inner class MainHolder( val binding: CardMealLocationBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MainHolder( val binding: CardMealLocationBinding , private  val readOnly: Boolean) : RecyclerView.ViewHolder(binding.root) {
 
+        val readOnlyRow = readOnly
         fun bind(mealLocation: MealLocationModel, listener: MealLocationListener){
 //            binding.mealName.text = mealLocation.mealName
 //            binding.mealDescription.text = mealLocation.mealDescription

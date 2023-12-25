@@ -113,7 +113,7 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
     }
 
     private fun render(mealLocationsList: ArrayList<MealLocationModel>) {
-        fragBinding.recyclerView.adapter = MealLocationAdapter(mealLocationsList, this)
+        fragBinding.recyclerView.adapter = MealLocationAdapter(mealLocationsList, this , mealLocationsListViewModel.readOnly.value!!)
         if (mealLocationsList.isEmpty()) {
             fragBinding.recyclerView.visibility = View.GONE
             fragBinding.mealLocationsNotFound.visibility = View.VISIBLE
@@ -129,7 +129,8 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
         val action = MealLocationsListFragmentDirections.actionNavHomeToMealLocationDetailFragment(
             mealLocation.uid!!
         )
-        findNavController().navigate(action)
+        if(!mealLocationsListViewModel.readOnly.value!!)
+            findNavController().navigate(action)
     }
 
     override fun onResume() {
@@ -158,7 +159,10 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
         fragBinding.swiperefresh.setOnRefreshListener {
             fragBinding.swiperefresh.isRefreshing = true
             showLoader(loader, "Fetching your meal locations")
-            mealLocationsListViewModel.load()
+            if (mealLocationsListViewModel.readOnly.value!!)
+                mealLocationsListViewModel.loadAll()
+            else
+                mealLocationsListViewModel.load()
         }
     }
 
