@@ -18,6 +18,7 @@ import ie.setu.ayoeats.databinding.FragmentMealLocationsListBinding
 import ie.setu.ayoeats.models.MealLocationModel
 import ie.setu.ayoeats.ui.auth.LoggedInViewModel
 import ie.setu.ayoeats.utils.SwipeToDeleteCallback
+import ie.setu.ayoeats.utils.SwipeToEditCallback
 import ie.setu.ayoeats.utils.createLoader
 import ie.setu.ayoeats.utils.hideLoader
 import ie.setu.ayoeats.utils.showLoader
@@ -80,6 +81,15 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
         val itemTouchDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
         itemTouchDeleteHelper.attachToRecyclerView(fragBinding.recyclerView)
 
+        // swipe Edit
+        val swipeEditHandler = object : SwipeToEditCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                onMealLocationClick(viewHolder.itemView.tag as MealLocationModel)
+            }
+        }
+        val itemTouchEditHelper = ItemTouchHelper(swipeEditHandler)
+        itemTouchEditHelper.attachToRecyclerView(fragBinding.recyclerView)
+
 
 
         return root
@@ -104,10 +114,10 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
 
     override fun onMealLocationClick(mealLocation: MealLocationModel) {
         Timber.i("Clicked the meal location : $mealLocation")
-//        val action = MealLocationsListFragmentDirections.actionNavHomeToMealLocationDetailFragment(
-//            mealLocation.uid
-//        )
-//        findNavController().navigate(action)
+        val action = MealLocationsListFragmentDirections.actionNavHomeToMealLocationDetailFragment(
+            mealLocation.uid!!
+        )
+        findNavController().navigate(action)
     }
 
     override fun onResume() {
@@ -128,6 +138,7 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
                 mealLocationsListViewModel.loadAll()
             }
         })
+//        hideLoader(loader)
     }
 
     // Refresh the feed
@@ -135,6 +146,7 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
         fragBinding.swiperefresh.setOnRefreshListener {
             fragBinding.swiperefresh.isRefreshing = true
             showLoader(loader, "Fetching your meal locations")
+            mealLocationsListViewModel.loadAll()
         }
     }
 

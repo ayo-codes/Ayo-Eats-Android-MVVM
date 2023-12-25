@@ -9,16 +9,20 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import ie.setu.ayoeats.R
 import ie.setu.ayoeats.databinding.FragmentMealLocationDetailBinding
 import ie.setu.ayoeats.databinding.FragmentMealLocationsListBinding
+import ie.setu.ayoeats.models.MealLocationModel
 import ie.setu.ayoeats.ui.auth.LoggedInViewModel
+import ie.setu.ayoeats.ui.mealLocation.MealLocationViewModel
 
 class MealLocationDetailFragment : Fragment() {
 
     private val detailViewModel: MealLocationDetailViewModel by activityViewModels()
     private val loggedInViewModel : LoggedInViewModel by activityViewModels()
+    private val mealLocationViewModel : MealLocationViewModel by activityViewModels()
     private val args by navArgs<MealLocationDetailFragmentArgs>()
     private var _fragBinging : FragmentMealLocationDetailBinding? = null
     private val fragBinding get() = _fragBinging!!
@@ -33,6 +37,11 @@ class MealLocationDetailFragment : Fragment() {
         Toast.makeText(context, "Meal Location Id selected : ${args.mealLocationuid}", Toast.LENGTH_LONG).show()
 
         detailViewModel.observableMealLocation.observe(viewLifecycleOwner, Observer { render() })
+
+        fragBinding.editMealLocationButton.setOnClickListener {
+            detailViewModel.updateMealLocation(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.mealLocationuid , fragBinding.mealLocationDetail?.observableMealLocation!!.value!!)
+            findNavController().navigateUp()
+        }
         return root
     }
 
@@ -42,7 +51,7 @@ class MealLocationDetailFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        detailViewModel.getMealLocation(args.mealLocationuid)
+        detailViewModel.getMealLocation(loggedInViewModel.liveFirebaseUser.value?.uid!! ,args.mealLocationuid)
     }
 
 }

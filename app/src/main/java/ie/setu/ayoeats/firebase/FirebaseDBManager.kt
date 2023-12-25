@@ -48,7 +48,13 @@ object FirebaseDBManager : MealLocationStore {
         mealLocationid: String,
         mealLocation: MutableLiveData<MealLocationModel>
     ) {
-        TODO("Not yet implemented")
+        database.child("user-meal-locations").child(userid)
+            .child(mealLocationid).get().addOnSuccessListener {
+                mealLocation.value = it.getValue(MealLocationModel::class.java)
+                Timber.i("firebase Got value ${it.value}")
+            }.addOnFailureListener{
+                Timber.e("firebase Error getting data $it")
+            }
     }
 
     override fun create(
@@ -82,6 +88,12 @@ object FirebaseDBManager : MealLocationStore {
     }
 
     override fun update(userid: String, mealLocationid: String, mealLocation: MealLocationModel) {
-        TODO("Not yet implemented")
+        val mealLocationValues = mealLocation.toMap()
+
+        val childUpdate : MutableMap<String, Any?> = HashMap()
+        childUpdate["meal-locations/$mealLocationid"] = mealLocationValues
+        childUpdate["user-meal-locations/$userid/$mealLocationid"] = mealLocationValues
+
+        database.updateChildren(childUpdate)
     }
 }
