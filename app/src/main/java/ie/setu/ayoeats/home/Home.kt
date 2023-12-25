@@ -17,11 +17,13 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseUser
+import com.squareup.picasso.Picasso
 import ie.setu.ayoeats.R
 import ie.setu.ayoeats.databinding.ActivityMainBinding
 import ie.setu.ayoeats.databinding.NavHeaderMainBinding
 import ie.setu.ayoeats.ui.auth.LoggedInViewModel
 import ie.setu.ayoeats.ui.auth.Login
+import ie.setu.ayoeats.utils.customTransformation
 
 class Home : AppCompatActivity() {
 
@@ -84,6 +86,14 @@ class Home : AppCompatActivity() {
         var headerView = homeBinding.navView.getHeaderView(0)
         navHeaderBinding = NavHeaderMainBinding.bind(headerView)
         navHeaderBinding.navHeaderEmail.text = currentUser.email
+        if(currentUser.photoUrl != null && currentUser.displayName != null) {
+            navHeaderBinding.navHeaderName.text = currentUser.displayName
+            Picasso.get().load(currentUser.photoUrl)
+                .resize(200, 200)
+                .transform(customTransformation())
+                .centerCrop()
+                .into(navHeaderBinding.navHeaderImage)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
