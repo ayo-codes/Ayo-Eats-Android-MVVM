@@ -17,12 +17,13 @@ import ie.setu.ayoeats.databinding.FragmentMealLocationsListBinding
 import ie.setu.ayoeats.models.MealLocationModel
 import ie.setu.ayoeats.ui.auth.LoggedInViewModel
 import ie.setu.ayoeats.ui.mealLocation.MealLocationViewModel
+import ie.setu.ayoeats.ui.mealLocationsList.MealLocationsListViewModel
 
 class MealLocationDetailFragment : Fragment() {
 
     private val detailViewModel: MealLocationDetailViewModel by activityViewModels()
     private val loggedInViewModel : LoggedInViewModel by activityViewModels()
-    private val mealLocationViewModel : MealLocationViewModel by activityViewModels()
+    private val mealLocationsListViewModel : MealLocationsListViewModel by activityViewModels()
     private val args by navArgs<MealLocationDetailFragmentArgs>()
     private var _fragBinging : FragmentMealLocationDetailBinding? = null
     private val fragBinding get() = _fragBinging!!
@@ -40,6 +41,11 @@ class MealLocationDetailFragment : Fragment() {
 
         fragBinding.editMealLocationButton.setOnClickListener {
             detailViewModel.updateMealLocation(loggedInViewModel.liveFirebaseUser.value?.uid!!, args.mealLocationuid , fragBinding.mealLocationDetail?.observableMealLocation!!.value!!)
+            findNavController().navigateUp()
+        }
+
+        fragBinding.deleteMealLocationButton.setOnClickListener {
+            mealLocationsListViewModel.delete(loggedInViewModel.liveFirebaseUser.value?.uid!! , detailViewModel.observableMealLocation.value?.uid!!)
             findNavController().navigateUp()
         }
         return root
