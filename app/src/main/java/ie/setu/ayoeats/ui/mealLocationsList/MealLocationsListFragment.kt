@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +16,9 @@ import ie.setu.ayoeats.adapters.MealLocationAdapter
 import ie.setu.ayoeats.adapters.MealLocationListener
 import ie.setu.ayoeats.databinding.FragmentMealLocationsListBinding
 import ie.setu.ayoeats.models.MealLocationModel
+import ie.setu.ayoeats.ui.auth.LoggedInViewModel
 import ie.setu.ayoeats.utils.SwipeToDeleteCallback
+import ie.setu.ayoeats.utils.SwipeToEditCallback
 import ie.setu.ayoeats.utils.createLoader
 import ie.setu.ayoeats.utils.hideLoader
 import ie.setu.ayoeats.utils.showLoader
@@ -32,7 +32,9 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val fragBinding get() = _fragBinding!!
-    private val mealLocationsListViewModel: MealLocationsListViewModel by activityViewModels()
+    private val mealLocationsListViewModel: MealLocationsListViewModel by activityViewModels() // bring in meal locations list model
+    private val loggedInViewModel: LoggedInViewModel by activityViewModels()
+
 
     lateinit var loader: AlertDialog
     override fun onCreateView(
@@ -59,7 +61,6 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
                 }
 
 
-
             })
 
         setSwipeRefresh()
@@ -67,14 +68,27 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
         //swipe delete
         val swipeDeleteHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val adapter = fragBinding.recyclerView.adapter as MealLocationAdapter // sets adapter to the meallocation adapter
-                adapter.removeAt(viewHolder.adapterPosition) // calls the removeAt function
+                showLoader(loader, "Deleting Meal Location")
+                val adapter =
+                    fragBinding.recyclerView.adapter as MealLocationAdapter // sets adapter to the meallocation adapter
+                adapter.removeAt(viewHolder.adapterPosition) // calls the removeAt function in the recycler view
+                mealLocationsListViewModel.delete(mealLocationsListViewModel.liveFirebaseUser.value?.uid!!, (viewHolder.itemView.tag as MealLocationModel).uid!!)
+                hideLoader(loader)
 
             }
         }
 
         val itemTouchDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
         itemTouchDeleteHelper.attachToRecyclerView(fragBinding.recyclerView)
+
+        // swipe Edit
+        val swipeEditHandler = object : SwipeToEditCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                onMealLocationClick(viewHolder.itemView.tag as MealLocationModel)
+            }
+        }
+        val itemTouchEditHelper = ItemTouchHelper(swipeEditHandler)
+        itemTouchEditHelper.attachToRecyclerView(fragBinding.recyclerView)
 
 
 
@@ -101,7 +115,7 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
     override fun onMealLocationClick(mealLocation: MealLocationModel) {
         Timber.i("Clicked the meal location : $mealLocation")
         val action = MealLocationsListFragmentDirections.actionNavHomeToMealLocationDetailFragment(
-            mealLocation.uid
+            mealLocation.uid!!
         )
         findNavController().navigate(action)
     }
@@ -110,14 +124,21 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
         super.onResume()
         showLoader(loader, " Fetching your meal locations ")
 //        mealLocationsListViewModel.loadAll()
-        mealLocationsListViewModel.observableMealLocationsList.observe(
-            viewLifecycleOwner,
-            Observer { mealLocations ->
-                mealLocations?.let {
-                    render(mealLocations as ArrayList<MealLocationModel>)
-                    hideLoader(loader)
-                }
-            })
+//        mealLocationsListViewModel.observableMealLocationsList.observe(
+//            viewLifecycleOwner,
+//            Observer { mealLocations ->
+//                mealLocations?.let {
+//                    render(mealLocations as ArrayList<MealLocationModel>)
+//                    hideLoader(loader)
+//                }
+//            })
+        loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner, Observer { firebaseUser ->
+            if (firebaseUser != null) {
+                mealLocationsListViewModel.liveFirebaseUser.value = firebaseUser
+                mealLocationsListViewModel.loadAll()
+            }
+        })
+//        hideLoader(loader)
     }
 
     // Refresh the feed
@@ -125,6 +146,7 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
         fragBinding.swiperefresh.setOnRefreshListener {
             fragBinding.swiperefresh.isRefreshing = true
             showLoader(loader, "Fetching your meal locations")
+            mealLocationsListViewModel.loadAll()
         }
     }
 

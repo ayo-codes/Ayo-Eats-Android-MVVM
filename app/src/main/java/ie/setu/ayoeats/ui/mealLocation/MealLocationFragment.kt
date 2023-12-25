@@ -8,12 +8,14 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import ie.setu.ayoeats.R
 import ie.setu.ayoeats.databinding.FragmentMealLocationBinding
 import ie.setu.ayoeats.models.MealLocationModel
+import ie.setu.ayoeats.ui.auth.LoggedInViewModel
 import timber.log.Timber
 
 class MealLocationFragment : Fragment() {
@@ -23,7 +25,8 @@ class MealLocationFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val fragBinding get() = _fragBinding!!
-    private lateinit var mealLocationViewModel: MealLocationViewModel // view model
+    private val mealLocationViewModel: MealLocationViewModel by activityViewModels()// view model
+    private val loggedInViewModel: LoggedInViewModel by activityViewModels() // logged in user details
 
 
     override fun onCreateView(
@@ -35,8 +38,8 @@ class MealLocationFragment : Fragment() {
         _fragBinding = FragmentMealLocationBinding.inflate(inflater, container, false)
         val root: View = fragBinding.root
 
-        mealLocationViewModel =
-            ViewModelProvider(this).get(MealLocationViewModel::class.java) // initialise the view model
+//        mealLocationViewModel =
+//            ViewModelProvider(this).get(MealLocationViewModel::class.java) // initialise the view model - not reqd as using activityviewmodels
 
         mealLocationViewModel.observableStatus.observe(viewLifecycleOwner, Observer { status ->
             status?.let { render(status) }
@@ -100,11 +103,14 @@ class MealLocationFragment : Fragment() {
                 val mealRating = layout.RatingsProgress.text.toString().toDouble()
 
                 mealLocationViewModel.addMealLocation(
+                    loggedInViewModel.liveFirebaseUser,
                     MealLocationModel(
                         mealName = mealName,
                         mealDescription = mealDescription,
                         mealPrice = mealPrice,
-                        mealRating = mealRating
+                        mealRating = mealRating,
+                        email = loggedInViewModel.liveFirebaseUser.value?.email!!
+
                     )
                 )
 

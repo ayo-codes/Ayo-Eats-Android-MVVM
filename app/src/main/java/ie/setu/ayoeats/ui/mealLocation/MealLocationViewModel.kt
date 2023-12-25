@@ -3,6 +3,8 @@ package ie.setu.ayoeats.ui.mealLocation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseUser
+import ie.setu.ayoeats.firebase.FirebaseDBManager
 import ie.setu.ayoeats.models.MealLocationMemStore
 import ie.setu.ayoeats.models.MealLocationModel
 
@@ -19,9 +21,10 @@ class MealLocationViewModel : ViewModel() {
         get() = status
 
 //    val mealLocations = MealLocationMemStore
-    fun addMealLocation(mealLocation : MealLocationModel){
+    fun addMealLocation(firebaseUser: MutableLiveData<FirebaseUser> , mealLocation : MealLocationModel){
         status.value = try {
-            MealLocationMemStore.create(mealLocation)
+//            MealLocationMemStore.create(mealLocation)
+            FirebaseDBManager.create(firebaseUser, mealLocation)
             true
         } catch (e: IllegalArgumentException) {
             false

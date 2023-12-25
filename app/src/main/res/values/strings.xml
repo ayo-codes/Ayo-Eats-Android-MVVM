@@ -31,6 +31,8 @@
     <string name="mealDescription">Meal Description</string>
     <string name="mealPrice">Meal Price</string>
     <string name="mealRating">Meal Rating</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
 
     <!--    Meal Location Loading -->
     <string name="messageLoading">Please Wait while the Meal Locations are Loading...</string>
@@ -56,4 +58,6 @@
     <string name="firebase_user_management">Firebase User Management</string>
     <string name="emailpassword_status_fmt">Email User: %1$s (verified: %2$b)</string>
     <string name="emailpassword_title_text">Please Login Below</string>
+
+<!--    -->
 </resources>

@@ -1,6 +1,8 @@
 package ie.setu.ayoeats.models
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
+import com.google.firebase.auth.FirebaseUser
 import timber.log.Timber.Forest.i
 
 object MealLocationMemStore: AppCompatActivity(), MealLocationStore {
@@ -12,27 +14,61 @@ object MealLocationMemStore: AppCompatActivity(), MealLocationStore {
     }
 
     val mealLocations = ArrayList<MealLocationModel>()
-    override fun create(mealLocation: MealLocationModel) {
-        mealLocation.uid = getId()
+    fun create(mealLocation: MealLocationModel) {
+//        mealLocation.uid = getId()
         mealLocations.add(mealLocation)
         logAll()
     }
 
-    override fun findAll(): ArrayList<MealLocationModel> {
+     fun findAll(): ArrayList<MealLocationModel> {
         return mealLocations
     }
 
-    override fun findById(uid:Long) : MealLocationModel ? {
+     fun findById(uid:String) : MealLocationModel ? {
         val foundMealLocation : MealLocationModel? = mealLocations.find {it.uid == uid}
         return foundMealLocation
     }
 
-    override fun delete(uid: Long) {
+     fun delete(uid: Long) {
         TODO("Not yet implemented")
     }
 
     private fun logAll() {
         mealLocations.forEach { i("$it") }
         i("$mealLocations")
+    }
+
+    override fun findAll(mealLocationsList: MutableLiveData<List<MealLocationModel>>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun findAll(
+        userid: String,
+        mealLocationsList: MutableLiveData<List<MealLocationModel>>
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun findById(
+        userid: String,
+        mealLocationid: String,
+        mealLocation: MutableLiveData<MealLocationModel>
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun create(
+        firebaseUser: MutableLiveData<FirebaseUser>,
+        mealLocation: MealLocationModel
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override fun delete(userid: String, mealLocationid: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun update(userid: String, mealLocationid: String, mealLocation: MealLocationModel) {
+        TODO("Not yet implemented")
     }
 }
