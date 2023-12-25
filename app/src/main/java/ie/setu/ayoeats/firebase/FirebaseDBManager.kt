@@ -2,8 +2,11 @@ package ie.setu.ayoeats.firebase
 
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import ie.setu.ayoeats.models.MealLocationModel
 import ie.setu.ayoeats.models.MealLocationStore
 import timber.log.Timber
@@ -19,7 +22,25 @@ object FirebaseDBManager : MealLocationStore {
         userid: String,
         mealLocationsList: MutableLiveData<List<MealLocationModel>>
     ) {
-        TODO("Not yet implemented")
+        database.child("user-meal-locations").child(userid)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Timber.i("Firebase MealLocation error : ${error.message}")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val localList = ArrayList<MealLocationModel>()
+                    val children = snapshot.children
+                    children.forEach {
+                        val mealLocation = it.getValue(MealLocationModel::class.java)
+                        localList.add(mealLocation!!)
+                    }
+                    database.child("user-meal-locations").child(userid)
+                        .removeEventListener(this)
+
+                    mealLocationsList.value = localList
+                }
+            })
     }
 
     override fun findById(
