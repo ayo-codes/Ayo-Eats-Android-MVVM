@@ -5,9 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import ie.setu.ayoeats.firebase.FirebaseDBManager
-import ie.setu.ayoeats.models.MealLocationMemStore
 import ie.setu.ayoeats.models.MealLocationModel
-import ie.setu.ayoeats.models.MealLocationStore
 import timber.log.Timber
 
 class MealLocationsListViewModel : ViewModel() {
@@ -18,15 +16,17 @@ class MealLocationsListViewModel : ViewModel() {
         get() = mealLocationsList
 
     val liveFirebaseUser = MutableLiveData<FirebaseUser>()
+    var readOnly = MutableLiveData(false) // added to determine who owns a meal location
 
     init {
 
-        loadAll()
+        load()
     }
 
-    fun loadAll(){
+    fun load(){
         try {
 //           mealLocationsList.value = MealLocationMemStore.findAll()
+            readOnly.value = false
             FirebaseDBManager.findAll(liveFirebaseUser.value?.uid!! , mealLocationsList)
             Timber.i("Loading items : ${mealLocationsList.value.toString()}")
         } catch (e: Exception) {
@@ -37,10 +37,21 @@ class MealLocationsListViewModel : ViewModel() {
     fun delete(userid: String, id: String) {
         try {
             FirebaseDBManager.delete(userid,id)
-            Timber.i("Report Delete Success")
+            Timber.i("MealLocation Delete Success")
         }
         catch (e: Exception) {
-            Timber.i("Report Delete Error : $e.message")
+            Timber.i("MealLocation  Delete Error : $e.message")
+        }
+    }
+
+    fun loadAll() {
+        try {
+            readOnly.value = true
+            FirebaseDBManager.findAll(mealLocationsList)
+            Timber.i("Meal Locations LoadAll Success : ${mealLocationsList.value.toString()}")
+        }
+        catch (e: Exception) {
+            Timber.i("Meal Locations  LoadAll Error : $e.message")
         }
     }
 
