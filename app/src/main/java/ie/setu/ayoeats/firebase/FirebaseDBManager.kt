@@ -74,7 +74,11 @@ object FirebaseDBManager : MealLocationStore {
     }
 
     override fun delete(userid: String, mealLocationid: String) {
-        TODO("Not yet implemented")
+        val childDelete : MutableMap<String, Any?> = HashMap()
+        childDelete["/meal-locations/$mealLocationid"] = null
+        childDelete["/user-meal-locations/$userid/$mealLocationid"] = null
+
+        database.updateChildren(childDelete)
     }
 
     override fun update(userid: String, mealLocationid: String, mealLocation: MealLocationModel) {

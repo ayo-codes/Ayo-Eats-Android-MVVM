@@ -34,5 +34,15 @@ class MealLocationsListViewModel : ViewModel() {
         }
     }
 
+    fun delete(userid: String, id: String) {
+        try {
+            FirebaseDBManager.delete(userid,id)
+            Timber.i("Report Delete Success")
+        }
+        catch (e: Exception) {
+            Timber.i("Report Delete Error : $e.message")
+        }
+    }
+
 
 }

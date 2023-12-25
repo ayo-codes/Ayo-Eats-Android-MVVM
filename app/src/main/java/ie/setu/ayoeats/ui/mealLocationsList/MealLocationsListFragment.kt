@@ -67,9 +67,12 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
         //swipe delete
         val swipeDeleteHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                showLoader(loader, "Deleting Meal Location")
                 val adapter =
                     fragBinding.recyclerView.adapter as MealLocationAdapter // sets adapter to the meallocation adapter
-                adapter.removeAt(viewHolder.adapterPosition) // calls the removeAt function
+                adapter.removeAt(viewHolder.adapterPosition) // calls the removeAt function in the recycler view
+                mealLocationsListViewModel.delete(mealLocationsListViewModel.liveFirebaseUser.value?.uid!!, (viewHolder.itemView.tag as MealLocationModel).uid!!)
+                hideLoader(loader)
 
             }
         }
