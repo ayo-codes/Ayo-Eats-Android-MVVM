@@ -7,9 +7,9 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <!-- Menu Strings -->
-    <string name="menu_home">Home</string>
-    <string name="menu_meal_location">Add Meal Location </string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_home">Meal Locations </string>
+    <string name="menu_meal_location">Add a Meal Location</string>
+    <string name="menu_slideshow">About Us</string>
     <!--    Meal Location Strings -->
     <string name="button_add_MealLocation"> Add Meal Location</string>
     <string name="hint_mealName">Meal Name</string>
@@ -64,4 +64,7 @@
 
     <!--    Maps-->
     <string name="action_location">Locations</string>
+
+    <!--    About Us -->
+    <string name="blurb_about_us">This is a 2nd Year Mobile App Development Assignment by Ayodele Onamusi.\n\n The app allows a user to create a diary of sorts of meals they have eaten at different restaurants as well as rate them. </string>
 </resources>

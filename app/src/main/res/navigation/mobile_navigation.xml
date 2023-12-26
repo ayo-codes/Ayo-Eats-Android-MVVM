@@ -36,9 +36,9 @@
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="ie.setu.ayoeats.ui.slideshow.SlideshowFragment"
+        android:name="ie.setu.ayoeats.ui.aboutUs.AboutUsFragment"
         android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_about_us" />
     <fragment
         android:id="@+id/mealLocationDetailFragment"
         android:name="ie.setu.ayoeats.ui.detail.MealLocationDetailFragment"

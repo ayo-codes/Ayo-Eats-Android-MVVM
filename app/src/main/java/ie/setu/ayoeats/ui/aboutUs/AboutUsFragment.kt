@@ -1,4 +1,4 @@
-package ie.setu.ayoeats.ui.slideshow
+package ie.setu.ayoeats.ui.aboutUs
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import ie.setu.ayoeats.databinding.FragmentSlideshowBinding
+import ie.setu.ayoeats.databinding.FragmentAboutUsBinding
 
-class SlideshowFragment : Fragment() {
 
-    private var _binding: FragmentSlideshowBinding? = null
+class AboutUsFragment : Fragment() {
+
+    private var _binding: FragmentAboutUsBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -22,15 +23,15 @@ class SlideshowFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val slideshowViewModel =
-            ViewModelProvider(this).get(SlideshowViewModel::class.java)
+        val aboutUsViewModel =
+            ViewModelProvider(this).get(AboutUsViewModel::class.java)
 
-        _binding = FragmentSlideshowBinding.inflate(inflater, container, false)
+        _binding = FragmentAboutUsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textSlideshow
-        slideshowViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        aboutUsViewModel.text.observe(viewLifecycleOwner) {
+//            textView.text = it
         }
         return root
     }
