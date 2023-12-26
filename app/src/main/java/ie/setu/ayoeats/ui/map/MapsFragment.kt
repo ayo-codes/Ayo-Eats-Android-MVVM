@@ -98,21 +98,22 @@ class MapsFragment : Fragment() {
 
     // render for meal locations
     private fun render(mealLocationsList: ArrayList<MealLocationModel>) {
-        var markerColour : Float
-        if (!mealLocationsList.isEmpty()) {
+        var markerColour: Float
+        if (mealLocationsList.isNotEmpty()) {
             mapsViewModel.map.clear()
             mealLocationsList.forEach {
-              markerColour = if(it.email.equals(this.mealLocationListViewModel.liveFirebaseUser.value!!.email))
-                  BitmapDescriptorFactory.HUE_AZURE + 5
-                else
-                    BitmapDescriptorFactory.HUE_RED
+                markerColour =
+                    if (it.email.equals(this.mealLocationListViewModel.liveFirebaseUser.value!!.email))
+                        BitmapDescriptorFactory.HUE_AZURE + 5
+                    else
+                        BitmapDescriptorFactory.HUE_RED
 
                 mapsViewModel.map.addMarker(
                     MarkerOptions().position(LatLng(it.latitude, it.longitude))
                         .title("${it.mealName} €${it.mealDescription}")
                         .snippet(it.mealPrice.toString())
                         .icon(
-                            BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
+                            BitmapDescriptorFactory.defaultMarker(markerColour)
                         )
                 )
             }
@@ -142,7 +143,8 @@ class MapsFragment : Fragment() {
 
                 val item = menu.findItem(R.id.toggleDonations) as MenuItem
                 item.setActionView(R.layout.togglebutton_layout)
-                val toggleDonations: SwitchCompat = item.actionView!!.findViewById(R.id.toggleButton)
+                val toggleDonations: SwitchCompat =
+                    item.actionView!!.findViewById(R.id.toggleButton)
                 toggleDonations.isChecked = false
 
                 toggleDonations.setOnCheckedChangeListener { _, isChecked ->
@@ -153,9 +155,12 @@ class MapsFragment : Fragment() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 // Validate and handle the selected menu item
-                return NavigationUI.onNavDestinationSelected(menuItem,
-                    requireView().findNavController())
-            }     }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+                return NavigationUI.onNavDestinationSelected(
+                    menuItem,
+                    requireView().findNavController()
+                )
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 }
 
