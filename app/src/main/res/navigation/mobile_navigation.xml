@@ -36,7 +36,7 @@
     <fragment
         android:id="@+id/mealLocationDetailFragment"
         android:name="ie.setu.ayoeats.ui.detail.MealLocationDetailFragment"
-        android:label="fragment_meal_location_detail"
+        android:label="Meal Location Details"
         tools:layout="@layout/fragment_meal_location_detail" >
         <action
             android:id="@+id/action_mealLocationDetailFragment_to_nav_home"
@@ -48,7 +48,7 @@
     <fragment
         android:id="@+id/mapsFragment"
         android:name="ie.setu.ayoeats.ui.map.MapsFragment"
-        android:label="meal location map"
+        android:label="Meal Location Map"
         tools:layout="@layout/fragment_maps" >
         <action
             android:id="@+id/action_mapsFragment_to_mealLocationDetailFragment"

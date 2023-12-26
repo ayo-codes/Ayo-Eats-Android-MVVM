@@ -1,11 +1,13 @@
 package ie.setu.ayoeats.ui.map
 
+import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -26,14 +28,17 @@ class MapsFragment : Fragment() {
          * install it inside the SupportMapFragment. This method will only be triggered once the
          * user has installed Google Play services and returned to the app.
          */
-        private lateinit var mapsViewModel: MapsViewModel
+        private val mapsViewModel: MapsViewModel by activityViewModels()
+    @SuppressLint("MissingPermission")
         private val callback = OnMapReadyCallback { googleMap ->
             mapsViewModel.map = googleMap
-            val loc = LatLng(52.245696, -7.139102)
+        mapsViewModel.map.isMyLocationEnabled = true
+        val loc = LatLng(mapsViewModel.currentLocation.value!!.latitude,
+            mapsViewModel.currentLocation.value!!.longitude)
 
             mapsViewModel.map.uiSettings.isZoomControlsEnabled = true
             mapsViewModel.map.uiSettings.isMyLocationButtonEnabled = true
-            mapsViewModel.map.addMarker(MarkerOptions().position(loc).title("You are Here!"))
+//            mapsViewModel.map.addMarker(MarkerOptions().position(loc).title("You are Here!"))
             mapsViewModel.map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 14f))
         }
 
@@ -43,7 +48,6 @@ class MapsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mapsViewModel = ViewModelProvider(this)[MapsViewModel::class.java]
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }
 

@@ -1,6 +1,8 @@
 package ie.setu.ayoeats.home
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
@@ -9,6 +11,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -29,7 +32,10 @@ import ie.setu.ayoeats.databinding.NavHeaderMainBinding
 import ie.setu.ayoeats.firebase.FirebaseImageManager
 import ie.setu.ayoeats.ui.auth.LoggedInViewModel
 import ie.setu.ayoeats.ui.auth.Login
+import ie.setu.ayoeats.ui.map.MapsViewModel
+import ie.setu.ayoeats.utils.checkLocationPermissions
 import ie.setu.ayoeats.utils.customTransformation
+import ie.setu.ayoeats.utils.isPermissionGranted
 import ie.setu.ayoeats.utils.readImageUri
 import ie.setu.ayoeats.utils.showImagePicker
 import timber.log.Timber
@@ -43,6 +49,7 @@ class Home : AppCompatActivity() {
     private lateinit var navHeaderBinding : NavHeaderMainBinding
     private lateinit var headerView : View // header view
     private lateinit var intentLauncher : ActivityResultLauncher<Intent>
+    private val mapsViewModel : MapsViewModel by viewModels() // import maps view models
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +83,11 @@ class Home : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         initNavHeader() // Sets up the navigation header
+
+        // check location permissions
+        if(checkLocationPermissions(this)) {
+            mapsViewModel.updateCurrentLocation()
+        }
 
     }
 
@@ -174,6 +186,7 @@ class Home : AppCompatActivity() {
         }
     }
 
+    // images
     private fun registerImagePickerCallback() {
         intentLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -192,6 +205,24 @@ class Home : AppCompatActivity() {
                 }
             }
     }
+
+    //Permissions for Location
+    @SuppressLint("MissingPermission")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (isPermissionGranted(requestCode, grantResults))
+            mapsViewModel.updateCurrentLocation()
+        else {
+            // permissions denied, so use a default location
+            mapsViewModel.currentLocation.value = Location("Default").apply {
+                latitude = 52.245696
+                longitude = -7.139102
+            }
+        }
+        Timber.i("LOC : %s", mapsViewModel.currentLocation.value)
+    }
+
+
 
 
 }
