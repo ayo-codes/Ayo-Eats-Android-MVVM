@@ -16,7 +16,8 @@ data class MealLocationModel(
     var email: String = "joe@bloggs.com",
     var latitude: Double = 0.0,
     var longitude: Double = 0.0,
-    var mealImage : String = ""
+    var mealImage : String = "",
+    var address: String = "",
 
 ) :
     Parcelable
@@ -34,7 +35,8 @@ data class MealLocationModel(
             "email" to email,
             "latitude" to latitude,
             "longitude" to longitude,
-            "mealImage" to mealImage
+            "mealImage" to mealImage,
+            "address" to address
         )
     }
 }

@@ -131,7 +131,9 @@ class MealLocationFragment : Fragment() {
                         mealRating = mealRating,
                         email = loggedInViewModel.liveFirebaseUser.value?.email!!,
                         latitude = mapsViewModel.currentLocation.value!!.latitude,
-                        longitude = mapsViewModel.currentLocation.value!!.longitude
+                        longitude = mapsViewModel.currentLocation.value!!.longitude,
+                        address = mapsViewModel.getLocationDetails(mapsViewModel.currentLocation.value!!.latitude, mapsViewModel.currentLocation.value!!.longitude)
+
 
                     )
                 )
