@@ -2,6 +2,7 @@ package ie.setu.ayoeats.home
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
@@ -61,6 +62,7 @@ class Home : AppCompatActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
+        toolbar.setTitleTextColor(Color.BLACK) // change color of text
 
         val navController = findNavController(R.id.nav_host_fragment_content_main)
 
@@ -226,3 +228,5 @@ class Home : AppCompatActivity() {
 
 
 }
+
+
