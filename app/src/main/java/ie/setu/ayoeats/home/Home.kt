@@ -1,9 +1,11 @@
 package ie.setu.ayoeats.home
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -21,9 +23,11 @@ import com.squareup.picasso.Picasso
 import ie.setu.ayoeats.R
 import ie.setu.ayoeats.databinding.ActivityMainBinding
 import ie.setu.ayoeats.databinding.NavHeaderMainBinding
+import ie.setu.ayoeats.firebase.FirebaseImageManager
 import ie.setu.ayoeats.ui.auth.LoggedInViewModel
 import ie.setu.ayoeats.ui.auth.Login
 import ie.setu.ayoeats.utils.customTransformation
+import timber.log.Timber
 
 class Home : AppCompatActivity() {
 
@@ -32,6 +36,7 @@ class Home : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var navHeaderBinding : NavHeaderMainBinding
+    private lateinit var headerView : View // header view
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +69,8 @@ class Home : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+        initNavHeader() // Sets up the navigation header
+
     }
 
     public override fun onStart() {
@@ -71,7 +78,8 @@ class Home : AppCompatActivity() {
         loggedInViewModel = ViewModelProvider(this).get(LoggedInViewModel::class.java)
         loggedInViewModel.liveFirebaseUser.observe(this, Observer { firebaseUser ->
             if (firebaseUser !=null)
-                updateNavHeader(loggedInViewModel.liveFirebaseUser.value!!)
+//                updateNavHeader(loggedInViewModel.liveFirebaseUser.value!!)
+                updateNavHeader(firebaseUser) // passing in the firebaseUser from the loggedInView
         })
 
         // if the user is logged out
@@ -83,17 +91,49 @@ class Home : AppCompatActivity() {
     }
 
     private fun updateNavHeader(currentUser: FirebaseUser){
-        var headerView = homeBinding.navView.getHeaderView(0)
-        navHeaderBinding = NavHeaderMainBinding.bind(headerView)
+        FirebaseImageManager.imageUri.observe(this) { result ->
+            if (result == Uri.EMPTY) {
+                Timber.i("AE NO Existing imageUri")
+                if (currentUser.photoUrl != null) {
+                    //if you're a google user
+                    FirebaseImageManager.updateUserImage(
+                        currentUser.uid,
+                        currentUser.photoUrl,
+                        navHeaderBinding.navHeaderImage,
+                        false
+                    )
+                } else {
+                    Timber.i("AE Loading Existing Default imageUri")
+                    FirebaseImageManager.updateDefaultImage(
+                        currentUser.uid,
+                        R.drawable.unknown_person,
+                        navHeaderBinding.navHeaderImage
+                    )
+                }        } else // load existing image from firebase
+            {
+                Timber.i("AE Loading Existing imageUri")
+                FirebaseImageManager.updateUserImage(
+                    currentUser.uid,
+                    FirebaseImageManager.imageUri.value,
+                    navHeaderBinding.navHeaderImage, false
+                )
+            }    }
         navHeaderBinding.navHeaderEmail.text = currentUser.email
-        if(currentUser.photoUrl != null && currentUser.displayName != null) {
+        if(currentUser.displayName != null)
             navHeaderBinding.navHeaderName.text = currentUser.displayName
-            Picasso.get().load(currentUser.photoUrl)
-                .resize(200, 200)
-                .transform(customTransformation())
-                .centerCrop()
-                .into(navHeaderBinding.navHeaderImage)
-        }
+
+
+
+
+//        navHeaderBinding.navHeaderEmail.text = currentUser.email
+//        if(currentUser.photoUrl != null && currentUser.displayName != null) {
+//            navHeaderBinding.navHeaderName.text = currentUser.displayName
+//            Picasso.get().load(currentUser.photoUrl)
+//                .resize(200, 200)
+//                .transform(customTransformation())
+//                .centerCrop()
+//                .into(navHeaderBinding.navHeaderImage)
+//        }
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -113,6 +153,12 @@ class Home : AppCompatActivity() {
         val intent = Intent(this, Login::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
+    }
+
+    private fun initNavHeader() {
+        Timber.i("DX Init Nav Header")
+        headerView = homeBinding.navView.getHeaderView(0)
+        navHeaderBinding = NavHeaderMainBinding.bind(headerView)
     }
 
 
