@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -27,6 +30,8 @@ import ie.setu.ayoeats.firebase.FirebaseImageManager
 import ie.setu.ayoeats.ui.auth.LoggedInViewModel
 import ie.setu.ayoeats.ui.auth.Login
 import ie.setu.ayoeats.utils.customTransformation
+import ie.setu.ayoeats.utils.readImageUri
+import ie.setu.ayoeats.utils.showImagePicker
 import timber.log.Timber
 
 class Home : AppCompatActivity() {
@@ -37,6 +42,7 @@ class Home : AppCompatActivity() {
     private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var navHeaderBinding : NavHeaderMainBinding
     private lateinit var headerView : View // header view
+    private lateinit var intentLauncher : ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +94,9 @@ class Home : AppCompatActivity() {
                 startActivity(Intent(this, Login::class.java))
             }
         })
+
+        // picker for profile image
+        registerImagePickerCallback()
     }
 
     private fun updateNavHeader(currentUser: FirebaseUser){
@@ -159,6 +168,29 @@ class Home : AppCompatActivity() {
         Timber.i("DX Init Nav Header")
         headerView = homeBinding.navView.getHeaderView(0)
         navHeaderBinding = NavHeaderMainBinding.bind(headerView)
+        navHeaderBinding.navHeaderImage.setOnClickListener {
+            Toast.makeText(this, "Click to Change Image", Toast.LENGTH_SHORT).show()
+            showImagePicker(intentLauncher)
+        }
+    }
+
+    private fun registerImagePickerCallback() {
+        intentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                when(result.resultCode){
+                    RESULT_OK -> {
+                        if (result.data != null) {
+                            Timber.i("DX registerPickerCallback() ${readImageUri(result.resultCode, result.data).toString()}")
+                            FirebaseImageManager
+                                .updateUserImage(loggedInViewModel.liveFirebaseUser.value!!.uid,
+                                    readImageUri(result.resultCode, result.data),
+                                    navHeaderBinding.navHeaderImage,
+                                    true)
+                        } // end of if
+                    }
+                    RESULT_CANCELED -> { } else -> { }
+                }
+            }
     }
 
 

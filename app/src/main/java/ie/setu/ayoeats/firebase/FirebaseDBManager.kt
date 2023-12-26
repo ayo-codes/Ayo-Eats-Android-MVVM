@@ -114,4 +114,26 @@ object FirebaseDBManager : MealLocationStore {
 
         database.updateChildren(childUpdate)
     }
+
+    // manages the update of a user's profile photo
+    fun updateImageRef(userid: String,imageUri: String) {
+
+        val userMealLocations = database.child("user-meal-locations").child(userid)
+        val allMealLocations = database.child("meal-locations")
+
+        userMealLocations.addListenerForSingleValueEvent(
+            object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {}
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot.children.forEach {
+                        //Update Users imageUri
+                        it.ref.child("profilepic").setValue(imageUri)
+                        //Update all meal locations that match 'it'
+                        val mealLocation = it.getValue(MealLocationModel::class.java)
+                        allMealLocations.child(mealLocation!!.uid!!)
+                            .child("profilepic").setValue(imageUri)
+                    }
+                }
+            })
+    }
 }

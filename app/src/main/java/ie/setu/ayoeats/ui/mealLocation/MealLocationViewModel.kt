@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import ie.setu.ayoeats.firebase.FirebaseDBManager
+import ie.setu.ayoeats.firebase.FirebaseImageManager
 import ie.setu.ayoeats.models.MealLocationMemStore
 import ie.setu.ayoeats.models.MealLocationModel
 
@@ -24,6 +25,7 @@ class MealLocationViewModel : ViewModel() {
     fun addMealLocation(firebaseUser: MutableLiveData<FirebaseUser> , mealLocation : MealLocationModel){
         status.value = try {
 //            MealLocationMemStore.create(mealLocation)
+            mealLocation.profilepic = FirebaseImageManager.imageUri.value.toString()
             FirebaseDBManager.create(firebaseUser, mealLocation)
             true
         } catch (e: IllegalArgumentException) {

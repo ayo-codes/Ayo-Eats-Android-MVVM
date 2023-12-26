@@ -2,9 +2,12 @@ package ie.setu.ayoeats.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import ie.setu.ayoeats.databinding.CardMealLocationBinding
 import ie.setu.ayoeats.models.MealLocationModel
+import ie.setu.ayoeats.utils.customTransformation
 
 interface MealLocationListener {
     fun onMealLocationClick(mealLocationModel: MealLocationModel)
@@ -41,6 +44,11 @@ class MealLocationAdapter constructor(
 //            binding.mealDescription.text = mealLocation.mealDescription
             binding.root.tag = mealLocation
             binding.mealLocation = mealLocation
+            Picasso.get().load(mealLocation.profilepic.toUri())
+                .resize(200, 200)
+                .transform(customTransformation())
+                .centerCrop()
+                .into(binding.imageIcon)
             binding.root.setOnClickListener { listener.onMealLocationClick(mealLocation) }
             binding.executePendingBindings()
         }
