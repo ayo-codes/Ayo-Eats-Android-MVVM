@@ -31,16 +31,20 @@ class MapsFragment : Fragment() {
         private val mapsViewModel: MapsViewModel by activityViewModels()
     @SuppressLint("MissingPermission")
         private val callback = OnMapReadyCallback { googleMap ->
-            mapsViewModel.map = googleMap
+        mapsViewModel.map = googleMap
         mapsViewModel.map.isMyLocationEnabled = true
-        val loc = LatLng(mapsViewModel.currentLocation.value!!.latitude,
-            mapsViewModel.currentLocation.value!!.longitude)
+        mapsViewModel.currentLocation.observe(viewLifecycleOwner) {
+            val loc = LatLng(
+                mapsViewModel.currentLocation.value!!.latitude,
+                mapsViewModel.currentLocation.value!!.longitude
+            )
 
             mapsViewModel.map.uiSettings.isZoomControlsEnabled = true
             mapsViewModel.map.uiSettings.isMyLocationButtonEnabled = true
 //            mapsViewModel.map.addMarker(MarkerOptions().position(loc).title("You are Here!"))
             mapsViewModel.map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 14f))
         }
+    }
 
 
     override fun onCreateView(

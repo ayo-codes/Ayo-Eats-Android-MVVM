@@ -3,11 +3,16 @@ package ie.setu.ayoeats.ui.map
 import android.annotation.SuppressLint
 import android.app.Application
 import android.location.Location
+
+import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.GoogleMap
 import timber.log.Timber
 
@@ -18,8 +23,22 @@ class MapsViewModel(application: Application) : AndroidViewModel(application) {
     var currentLocation = MutableLiveData<Location>()
     var locationClient : FusedLocationProviderClient
 
+    // User's Live Location Updates
+    val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
+        .setWaitForAccurateLocation(false)
+        .setMinUpdateIntervalMillis(5000)
+        .setMaxUpdateDelayMillis(15000)
+        .build()
+
+    val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            currentLocation.value = locationResult.locations.last()
+        }
+    }
     init {
         locationClient = LocationServices.getFusedLocationProviderClient(application)
+        locationClient.requestLocationUpdates(locationRequest, locationCallback,
+            Looper.getMainLooper())
     }
     fun updateCurrentLocation() {
         if(locationClient.lastLocation.isSuccessful)
