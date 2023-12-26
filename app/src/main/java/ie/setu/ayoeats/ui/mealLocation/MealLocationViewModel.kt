@@ -26,10 +26,13 @@ class MealLocationViewModel : ViewModel() {
         status.value = try {
 //            MealLocationMemStore.create(mealLocation)
             mealLocation.profilepic = FirebaseImageManager.imageUri.value.toString()
+            mealLocation.mealImage = FirebaseImageManager.mealImageUri.value.toString() // Add meal image
             FirebaseDBManager.create(firebaseUser, mealLocation)
             true
         } catch (e: IllegalArgumentException) {
             false
         }
     }
+
+
 }

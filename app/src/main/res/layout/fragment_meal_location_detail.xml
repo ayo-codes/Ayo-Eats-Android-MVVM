@@ -128,6 +128,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
+    <ImageView
+        android:id="@+id/mealLocationImage"
+        android:layout_width="345dp"
+        android:layout_height="189dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/button_addImage"
+        app:layout_constraintBottom_toTopOf="@id/deleteMealLocationButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editMealRating"
+        app:layout_constraintVertical_bias="0.173"
+        app:srcCompat="@android:drawable/ic_menu_gallery" />
+
     <Button
         android:id="@+id/editMealLocationButton"
         android:layout_width="0dp"
