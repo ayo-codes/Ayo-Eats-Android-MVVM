@@ -118,8 +118,14 @@ class MealLocationFragment : Fragment() {
                     )
                 )
 
+                Snackbar.make(it, R.string.meal_location_add_successful, Snackbar.LENGTH_LONG)
+                    .show() // This shows the warning message if the field is empty
                 Timber.i("Click Worked")
                 Timber.i(mealName)
+
+                layout.mealName.text.clear()
+                layout.mealDescription.text.clear()
+                layout.mealPrice.text.clear()
             }
         }
     }
