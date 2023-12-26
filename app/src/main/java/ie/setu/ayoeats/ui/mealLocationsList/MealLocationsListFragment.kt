@@ -60,6 +60,12 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
         setupMenu() // Calls the setup menu
 
         fragBinding.recyclerView.layoutManager = LinearLayoutManager(activity)
+
+        fragBinding.fab.setOnClickListener {
+            val action = MealLocationsListFragmentDirections.actionNavHomeToNavMealLocation()
+            findNavController().navigate(action)
+        }
+
         loader = createLoader(requireActivity()) // creates the loader icon
 
         showLoader(loader, "Fetching your list of Meal Locations ")

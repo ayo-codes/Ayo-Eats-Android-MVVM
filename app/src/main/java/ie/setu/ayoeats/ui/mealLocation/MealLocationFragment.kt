@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import ie.setu.ayoeats.R
 import ie.setu.ayoeats.databinding.FragmentMealLocationBinding
@@ -118,8 +119,16 @@ class MealLocationFragment : Fragment() {
                     )
                 )
 
+                Snackbar.make(it, R.string.meal_location_add_successful, Snackbar.LENGTH_LONG)
+                    .show() // This shows the warning message if the field is empty
                 Timber.i("Click Worked")
                 Timber.i(mealName)
+
+                layout.mealName.text.clear()
+                layout.mealDescription.text.clear()
+                layout.mealPrice.text.clear()
+
+                findNavController().navigateUp()
             }
         }
     }

@@ -6,14 +6,12 @@ import android.graphics.Color
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -26,7 +24,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseUser
-import com.squareup.picasso.Picasso
 import ie.setu.ayoeats.R
 import ie.setu.ayoeats.databinding.ActivityMainBinding
 import ie.setu.ayoeats.databinding.NavHeaderMainBinding
@@ -35,7 +32,6 @@ import ie.setu.ayoeats.ui.auth.LoggedInViewModel
 import ie.setu.ayoeats.ui.auth.Login
 import ie.setu.ayoeats.ui.map.MapsViewModel
 import ie.setu.ayoeats.utils.checkLocationPermissions
-import ie.setu.ayoeats.utils.customTransformation
 import ie.setu.ayoeats.utils.isPermissionGranted
 import ie.setu.ayoeats.utils.readImageUri
 import ie.setu.ayoeats.utils.showImagePicker
@@ -75,11 +71,12 @@ class Home : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
 
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_meal_location, R.id.mapsFragment, R.id.nav_slideshow
+                R.id.fragmentMealLocationLists, R.id.mealLocationFragment, R.id.mapsFragment, R.id.nav_slideshow
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
