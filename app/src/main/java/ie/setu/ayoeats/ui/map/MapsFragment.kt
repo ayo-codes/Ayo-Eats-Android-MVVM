@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -16,7 +17,6 @@ import ie.setu.ayoeats.R
 
 class MapsFragment : Fragment() {
 
-    private val callback = OnMapReadyCallback { googleMap ->
         /**
          * Manipulates the map once available.
          * This callback is triggered when the map is ready to be used.
@@ -26,16 +26,24 @@ class MapsFragment : Fragment() {
          * install it inside the SupportMapFragment. This method will only be triggered once the
          * user has installed Google Play services and returned to the app.
          */
-        val setu = LatLng(52.245696, -7.139102)
-        googleMap.addMarker(MarkerOptions().position(setu).title("Marker in Sydney"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(setu))
-    }
+        private lateinit var mapsViewModel: MapsViewModel
+        private val callback = OnMapReadyCallback { googleMap ->
+            mapsViewModel.map = googleMap
+            val loc = LatLng(52.245696, -7.139102)
+
+            mapsViewModel.map.uiSettings.isZoomControlsEnabled = true
+            mapsViewModel.map.uiSettings.isMyLocationButtonEnabled = true
+            mapsViewModel.map.addMarker(MarkerOptions().position(loc).title("You are Here!"))
+            mapsViewModel.map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 14f))
+        }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mapsViewModel = ViewModelProvider(this)[MapsViewModel::class.java]
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }
 
