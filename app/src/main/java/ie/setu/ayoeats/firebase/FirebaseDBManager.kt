@@ -15,7 +15,25 @@ object FirebaseDBManager : MealLocationStore {
 
     var database: DatabaseReference = FirebaseDatabase.getInstance().reference
     override fun findAll(mealLocationsList: MutableLiveData<List<MealLocationModel>>) {
-        TODO("Not yet implemented")
+        database.child("meal-locations")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Timber.i("Firebase MealLocation error : ${error.message}")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val localList = ArrayList<MealLocationModel>()
+                    val children = snapshot.children
+                    children.forEach {
+                        val donation = it.getValue(MealLocationModel::class.java)
+                        localList.add(donation!!)
+                    }
+                    database.child("meal-locations")
+                        .removeEventListener(this)
+
+                    mealLocationsList.value = localList
+                }
+            })
     }
 
     override fun findAll(
@@ -95,5 +113,27 @@ object FirebaseDBManager : MealLocationStore {
         childUpdate["user-meal-locations/$userid/$mealLocationid"] = mealLocationValues
 
         database.updateChildren(childUpdate)
+    }
+
+    // manages the update of a user's profile photo
+    fun updateImageRef(userid: String,imageUri: String) {
+
+        val userMealLocations = database.child("user-meal-locations").child(userid)
+        val allMealLocations = database.child("meal-locations")
+
+        userMealLocations.addListenerForSingleValueEvent(
+            object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {}
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot.children.forEach {
+                        //Update Users imageUri
+                        it.ref.child("profilepic").setValue(imageUri)
+                        //Update all meal locations that match 'it'
+                        val mealLocation = it.getValue(MealLocationModel::class.java)
+                        allMealLocations.child(mealLocation!!.uid!!)
+                            .child("profilepic").setValue(imageUri)
+                    }
+                }
+            })
     }
 }

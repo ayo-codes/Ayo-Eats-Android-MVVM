@@ -3,15 +3,25 @@ package ie.setu.ayoeats.ui.mealLocationsList
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SwitchCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ie.setu.ayoeats.R
 import ie.setu.ayoeats.adapters.MealLocationAdapter
 import ie.setu.ayoeats.adapters.MealLocationListener
 import ie.setu.ayoeats.databinding.FragmentMealLocationsListBinding
@@ -46,6 +56,8 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
 
         _fragBinding = FragmentMealLocationsListBinding.inflate(inflater, container, false)
         val root: View = fragBinding.root
+
+        setupMenu() // Calls the setup menu
 
         fragBinding.recyclerView.layoutManager = LinearLayoutManager(activity)
         loader = createLoader(requireActivity()) // creates the loader icon
@@ -101,7 +113,7 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
     }
 
     private fun render(mealLocationsList: ArrayList<MealLocationModel>) {
-        fragBinding.recyclerView.adapter = MealLocationAdapter(mealLocationsList, this)
+        fragBinding.recyclerView.adapter = MealLocationAdapter(mealLocationsList, this , mealLocationsListViewModel.readOnly.value!!)
         if (mealLocationsList.isEmpty()) {
             fragBinding.recyclerView.visibility = View.GONE
             fragBinding.mealLocationsNotFound.visibility = View.VISIBLE
@@ -117,7 +129,8 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
         val action = MealLocationsListFragmentDirections.actionNavHomeToMealLocationDetailFragment(
             mealLocation.uid!!
         )
-        findNavController().navigate(action)
+        if(!mealLocationsListViewModel.readOnly.value!!)
+            findNavController().navigate(action)
     }
 
     override fun onResume() {
@@ -135,7 +148,7 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
         loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner, Observer { firebaseUser ->
             if (firebaseUser != null) {
                 mealLocationsListViewModel.liveFirebaseUser.value = firebaseUser
-                mealLocationsListViewModel.loadAll()
+                mealLocationsListViewModel.load()
             }
         })
 //        hideLoader(loader)
@@ -146,7 +159,10 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
         fragBinding.swiperefresh.setOnRefreshListener {
             fragBinding.swiperefresh.isRefreshing = true
             showLoader(loader, "Fetching your meal locations")
-            mealLocationsListViewModel.loadAll()
+            if (mealLocationsListViewModel.readOnly.value!!)
+                mealLocationsListViewModel.loadAll()
+            else
+                mealLocationsListViewModel.load()
         }
     }
 
@@ -156,4 +172,33 @@ class MealLocationsListFragment : Fragment(), MealLocationListener {
     }
 
 
+    // Menu Setup
+
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+            override fun onPrepareMenu(menu: Menu) {
+                // Handle for example visibility of menu items
+            }
+
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.main, menu)
+
+                val item = menu.findItem(R.id.toggleDonations) as MenuItem
+                item.setActionView(R.layout.togglebutton_layout)
+                val toggleDonations: SwitchCompat = item.actionView!!.findViewById(R.id.toggleButton)
+                toggleDonations.isChecked = false
+
+                toggleDonations.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) mealLocationsListViewModel.loadAll()
+                    else mealLocationsListViewModel.load()
+                }
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                // Validate and handle the selected menu item
+                return NavigationUI.onNavDestinationSelected(menuItem,
+                    requireView().findNavController())
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
 }
