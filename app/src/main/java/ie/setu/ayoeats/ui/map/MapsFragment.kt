@@ -62,10 +62,11 @@ class MapsFragment : Fragment() {
                 mapsViewModel.currentLocation.value!!.longitude
             )
 
+            mapsViewModel.map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 14f))
             mapsViewModel.map.uiSettings.isZoomControlsEnabled = true
             mapsViewModel.map.uiSettings.isMyLocationButtonEnabled = true
 //            mapsViewModel.map.addMarker(MarkerOptions().position(loc).title("You are Here!"))
-            mapsViewModel.map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 14f))
+
 
             mealLocationListViewModel.observableMealLocationsList.observe(
                 viewLifecycleOwner, Observer { mealLocations ->
@@ -110,7 +111,7 @@ class MapsFragment : Fragment() {
 
                 mapsViewModel.map.addMarker(
                     MarkerOptions().position(LatLng(it.latitude, it.longitude))
-                        .title("${it.mealName} €${it.mealDescription}")
+                        .title("${it.mealName} ${it.mealDescription}")
                         .snippet(it.mealPrice.toString())
                         .icon(
                             BitmapDescriptorFactory.defaultMarker(markerColour)
