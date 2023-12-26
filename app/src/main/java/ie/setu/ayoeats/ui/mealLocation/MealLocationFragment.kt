@@ -16,6 +16,7 @@ import ie.setu.ayoeats.R
 import ie.setu.ayoeats.databinding.FragmentMealLocationBinding
 import ie.setu.ayoeats.models.MealLocationModel
 import ie.setu.ayoeats.ui.auth.LoggedInViewModel
+import ie.setu.ayoeats.ui.map.MapsViewModel
 import timber.log.Timber
 
 class MealLocationFragment : Fragment() {
@@ -27,6 +28,7 @@ class MealLocationFragment : Fragment() {
     private val fragBinding get() = _fragBinding!!
     private val mealLocationViewModel: MealLocationViewModel by activityViewModels()// view model
     private val loggedInViewModel: LoggedInViewModel by activityViewModels() // logged in user details
+    private val mapsViewModel: MapsViewModel by activityViewModels() // for maps
 
 
     override fun onCreateView(
@@ -109,7 +111,9 @@ class MealLocationFragment : Fragment() {
                         mealDescription = mealDescription,
                         mealPrice = mealPrice,
                         mealRating = mealRating,
-                        email = loggedInViewModel.liveFirebaseUser.value?.email!!
+                        email = loggedInViewModel.liveFirebaseUser.value?.email!!,
+                        latitude = mapsViewModel.currentLocation.value!!.latitude,
+                        longitude = mapsViewModel.currentLocation.value!!.longitude
 
                     )
                 )

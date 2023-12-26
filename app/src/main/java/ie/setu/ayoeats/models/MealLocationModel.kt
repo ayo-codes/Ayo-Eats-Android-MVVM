@@ -13,7 +13,10 @@ data class MealLocationModel(
     var mealPrice: Double = 0.00,
     var mealRating: Double = 0.00,
     var profilepic: String = "",
-    var email: String = "joe@bloggs.com"
+    var email: String = "joe@bloggs.com",
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0
+
 ) :
     Parcelable
 
@@ -27,7 +30,9 @@ data class MealLocationModel(
             "mealPrice" to mealPrice,
             "mealRating" to mealRating,
             "profilepic" to profilepic,
-            "email" to email
+            "email" to email,
+            "latitude" to latitude,
+            "longitude" to longitude
         )
     }
 }

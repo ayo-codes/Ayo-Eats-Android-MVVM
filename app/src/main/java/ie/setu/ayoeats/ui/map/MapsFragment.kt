@@ -1,6 +1,7 @@
 package ie.setu.ayoeats.ui.map
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
@@ -8,29 +9,42 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import ie.setu.ayoeats.R
+import ie.setu.ayoeats.models.MealLocationModel
+import ie.setu.ayoeats.ui.auth.LoggedInViewModel
+import ie.setu.ayoeats.ui.mealLocationsList.MealLocationsListViewModel
+import ie.setu.ayoeats.utils.createLoader
+import ie.setu.ayoeats.utils.hideLoader
+import ie.setu.ayoeats.utils.showLoader
 
 class MapsFragment : Fragment() {
 
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
-        private val mapsViewModel: MapsViewModel by activityViewModels()
+    /**
+     * Manipulates the map once available.
+     * This callback is triggered when the map is ready to be used.
+     * This is where we can add markers or lines, add listeners or move the camera.
+     * In this case, we just add a marker near Sydney, Australia.
+     * If Google Play services is not installed on the device, the user will be prompted to
+     * install it inside the SupportMapFragment. This method will only be triggered once the
+     * user has installed Google Play services and returned to the app.
+     */
+
+    private val mapsViewModel: MapsViewModel by activityViewModels()
+    private val mealLocationListViewModel: MealLocationsListViewModel by activityViewModels()
+    private val loggedInViewModel: LoggedInViewModel by activityViewModels()
+    lateinit var loader: AlertDialog
+
     @SuppressLint("MissingPermission")
-        private val callback = OnMapReadyCallback { googleMap ->
+    private val callback = OnMapReadyCallback { googleMap ->
         mapsViewModel.map = googleMap
         mapsViewModel.map.isMyLocationEnabled = true
         mapsViewModel.currentLocation.observe(viewLifecycleOwner) {
@@ -43,6 +57,15 @@ class MapsFragment : Fragment() {
             mapsViewModel.map.uiSettings.isMyLocationButtonEnabled = true
 //            mapsViewModel.map.addMarker(MarkerOptions().position(loc).title("You are Here!"))
             mapsViewModel.map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 14f))
+
+            mealLocationListViewModel.observableMealLocationsList.observe(
+                viewLifecycleOwner, Observer { mealLocations ->
+                    mealLocations?.let {
+                        render(mealLocations as ArrayList<MealLocationModel>)
+                        hideLoader(loader)
+                    }
+                }
+            )
         }
     }
 
@@ -52,6 +75,7 @@ class MapsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        loader = createLoader(requireActivity())
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }
 
@@ -60,4 +84,34 @@ class MapsFragment : Fragment() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
     }
+
+
+    // render for meal locations
+    private fun render(mealLocationsList: ArrayList<MealLocationModel>) {
+        if (!mealLocationsList.isEmpty()) {
+            mapsViewModel.map.clear()
+            mealLocationsList.forEach {
+                mapsViewModel.map.addMarker(
+                    MarkerOptions().position(LatLng(it.latitude, it.longitude))
+                        .title("${it.mealName} €${it.mealDescription}")
+                        .snippet(it.mealPrice.toString())
+                        .icon(
+                            BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
+                        )
+                )
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        showLoader(loader, "Fetching Meal Locations")
+        loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) { firebaseUser ->
+            if (firebaseUser != null) {
+                mealLocationListViewModel.liveFirebaseUser.value = firebaseUser
+                mealLocationListViewModel.load()
+            }
+        }
+    }
 }
+
