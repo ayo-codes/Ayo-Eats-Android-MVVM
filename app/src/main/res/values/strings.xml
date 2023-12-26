@@ -61,4 +61,7 @@
 
     <!--    Images -->
     <string name="select_profile_image">Select Profile Image</string>
+
+    <!--    Maps-->
+    <string name="action_location">Locations</string>
 </resources>
