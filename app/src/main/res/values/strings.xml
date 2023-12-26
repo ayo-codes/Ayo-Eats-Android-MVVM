@@ -21,6 +21,7 @@
     <string name="enter_mealLocation_mealName">Please Enter a Meal Name</string>
     <string name="save_meal_location">Save Meal Location</string>
     <string name="meal_location_add_successful">Your Meal Location has been successfully added</string>
+    <string name="button_addImage">Add Meal Image </string>
 
     <!-- Meal Location List -->
     <string name="mealLocationsNotFound">No meal locations Yet…\nGo and add a Meal!</string>
