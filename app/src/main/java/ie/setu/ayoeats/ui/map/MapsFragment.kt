@@ -2,6 +2,7 @@ package ie.setu.ayoeats.ui.map
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.app.Application
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
@@ -34,8 +35,10 @@ import ie.setu.ayoeats.ui.mealLocationsList.MealLocationsListViewModel
 import ie.setu.ayoeats.utils.createLoader
 import ie.setu.ayoeats.utils.hideLoader
 import ie.setu.ayoeats.utils.showLoader
+import com.google.android.libraries.places.api.Places
+import com.google.android.material.snackbar.Snackbar
 
-class MapsFragment : Fragment() {
+class MapsFragment: Fragment()  {
 
     /**
      * Manipulates the map once available.
@@ -52,6 +55,7 @@ class MapsFragment : Fragment() {
     private val loggedInViewModel: LoggedInViewModel by activityViewModels()
     lateinit var loader: AlertDialog
 
+
     @SuppressLint("MissingPermission")
     private val callback = OnMapReadyCallback { googleMap ->
         mapsViewModel.map = googleMap
@@ -65,6 +69,7 @@ class MapsFragment : Fragment() {
             mapsViewModel.map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 14f))
             mapsViewModel.map.uiSettings.isZoomControlsEnabled = true
             mapsViewModel.map.uiSettings.isMyLocationButtonEnabled = true
+//            mapsViewModel.getLocationDetails(mapsViewModel.currentLocation.value!!.latitude, mapsViewModel.currentLocation.value!!.longitude)
 //            mapsViewModel.map.addMarker(MarkerOptions().position(loc).title("You are Here!"))
 
 
@@ -87,6 +92,7 @@ class MapsFragment : Fragment() {
     ): View? {
         loader = createLoader(requireActivity())
         setupMenu()
+        Places.initialize(mapsViewModel.context, "@string/google_api_key")
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }
 

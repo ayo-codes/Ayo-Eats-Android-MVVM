@@ -78,3 +78,10 @@ fun readImageUri(resultCode: Int, data: Intent?): Uri? {
     }
     return uri
 }
+
+fun showMealImagePicker(intentLauncher : ActivityResultLauncher<Intent>) {
+    var chooseFile = Intent(Intent.ACTION_OPEN_DOCUMENT)
+    chooseFile.type = "image/*"
+    chooseFile = Intent.createChooser(chooseFile, R.string.select_meal_image.toString())
+    intentLauncher.launch(chooseFile)
+}

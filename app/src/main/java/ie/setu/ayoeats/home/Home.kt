@@ -205,6 +205,8 @@ class Home : AppCompatActivity() {
             }
     }
 
+
+
     //Permissions for Location
     @SuppressLint("MissingPermission")
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

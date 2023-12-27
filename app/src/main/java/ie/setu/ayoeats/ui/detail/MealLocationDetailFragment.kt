@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.squareup.picasso.Picasso
 import ie.setu.ayoeats.R
 import ie.setu.ayoeats.databinding.FragmentMealLocationDetailBinding
 import ie.setu.ayoeats.databinding.FragmentMealLocationsListBinding
@@ -18,6 +20,7 @@ import ie.setu.ayoeats.models.MealLocationModel
 import ie.setu.ayoeats.ui.auth.LoggedInViewModel
 import ie.setu.ayoeats.ui.mealLocation.MealLocationViewModel
 import ie.setu.ayoeats.ui.mealLocationsList.MealLocationsListViewModel
+import ie.setu.ayoeats.utils.customTransformation
 
 class MealLocationDetailFragment : Fragment() {
 
@@ -53,6 +56,11 @@ class MealLocationDetailFragment : Fragment() {
 
     private fun render() {
         fragBinding.mealLocationDetail = detailViewModel
+        Picasso.get().load(detailViewModel.observableMealLocation.value?.mealImage?.toUri())
+            .resize(200, 200)
+            .transform(customTransformation())
+            .centerCrop()
+            .into(fragBinding.mealLocationImage)
     }
 
     override fun onResume() {

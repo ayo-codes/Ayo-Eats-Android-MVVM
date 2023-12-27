@@ -1,5 +1,6 @@
 package ie.setu.ayoeats.ui.mealLocation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -15,9 +19,12 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import ie.setu.ayoeats.R
 import ie.setu.ayoeats.databinding.FragmentMealLocationBinding
+import ie.setu.ayoeats.firebase.FirebaseImageManager
 import ie.setu.ayoeats.models.MealLocationModel
 import ie.setu.ayoeats.ui.auth.LoggedInViewModel
 import ie.setu.ayoeats.ui.map.MapsViewModel
+import ie.setu.ayoeats.utils.readImageUri
+import ie.setu.ayoeats.utils.showImagePicker
 import timber.log.Timber
 
 class MealLocationFragment : Fragment() {
@@ -30,6 +37,8 @@ class MealLocationFragment : Fragment() {
     private val mealLocationViewModel: MealLocationViewModel by activityViewModels()// view model
     private val loggedInViewModel: LoggedInViewModel by activityViewModels() // logged in user details
     private val mapsViewModel: MapsViewModel by activityViewModels() // for maps
+
+    private lateinit var intentLauncher : ActivityResultLauncher<Intent>
 
 
     override fun onCreateView(
@@ -71,6 +80,14 @@ class MealLocationFragment : Fragment() {
 //        mealLocationViewModel.text.observe(viewLifecycleOwner) {
 //            textView.text = it
 //        }
+
+        fragBinding.mealLocationImage.setOnClickListener {
+            Snackbar.make(it,"Click here to add image ", Snackbar.LENGTH_LONG)
+                .show()
+            showImagePicker(intentLauncher)
+        }
+
+        registerMealImagePickerCallback()
         return root
     }
 
@@ -114,7 +131,9 @@ class MealLocationFragment : Fragment() {
                         mealRating = mealRating,
                         email = loggedInViewModel.liveFirebaseUser.value?.email!!,
                         latitude = mapsViewModel.currentLocation.value!!.latitude,
-                        longitude = mapsViewModel.currentLocation.value!!.longitude
+                        longitude = mapsViewModel.currentLocation.value!!.longitude,
+                        address = mapsViewModel.getLocationDetails(mapsViewModel.currentLocation.value!!.latitude, mapsViewModel.currentLocation.value!!.longitude)
+
 
                     )
                 )
@@ -132,5 +151,27 @@ class MealLocationFragment : Fragment() {
             }
         }
     }
+
+    private fun registerMealImagePickerCallback() {
+        intentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                when(result.resultCode){
+                    AppCompatActivity.RESULT_OK -> {
+                        if (result.data != null) {
+                            Timber.i("DX registerPickerCallback() ${readImageUri(result.resultCode, result.data).toString()}")
+                            FirebaseImageManager
+                                .updateMealImage(loggedInViewModel.liveFirebaseUser.value!!.uid,
+                                    readImageUri(result.resultCode, result.data),
+                                    fragBinding.mealLocationImage,
+                                    true)
+                        } // end of if
+                    }
+                    AppCompatActivity.RESULT_CANCELED -> { } else -> { }
+                }
+            }
+    }
+
+
+
 }
 
