@@ -54,7 +54,7 @@
 
 
 ## UML Class Diagram
-+ Uml class diagram generated using a plugin with android studio IDE - UML generator
++ Uml class diagram generated using a plugin with android studio IDE - UML generator, Please Zoom in for details
 ![][uml_diagram]
 
 ## UX/DX Approach
