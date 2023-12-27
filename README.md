@@ -53,8 +53,9 @@
 
 
 
-## UML Class Diagram 
-![][insert_photo]
+## UML Class Diagram
++ Uml class diagram generated using a plugin with android studio IDE - UML generator
+![][uml_diagram]
 
 ## UX/DX Approach
 + The app was built using the MVVM design pattern/architecture in terms of organising the code and in kotlin
@@ -75,3 +76,5 @@
 
 ## Demo 
 you can view a demo of the app here - https://youtu.be/xkVUxy0hX_A
+
+[uml_diagram]: ./app/src/main/res/drawable/Assignment_2.png
